@@ -71,15 +71,16 @@ exports.createPages = ({ graphql, actions }) => {
       .then(() => {
         graphql(
           `
-            {
-              allWordpressPost {
+          {
+             allWordpressWpModule{
                 edges{
                   node{
-                    id
                     title
-                    slug
-                    excerpt
                     content
+                    slug
+                    featured_media{
+                      source_url
+                    }
                   }
                 }
               }
@@ -90,14 +91,14 @@ exports.createPages = ({ graphql, actions }) => {
             console.log(result.errors)
             reject(result.errors)
           }
-          const postTemplate = path.resolve("./src/templates/post.js")
+          const moduleTemplate = path.resolve("./src/templates/module.js")
           // We want to create a detailed page for each
           // post node. We'll just use the WordPress Slug for the slug.
           // The Post ID is prefixed with 'POST_'
-          _.each(result.data.allWordpressPost.edges, edge => {
+          _.each(result.data.allWordpressWpModule.edges, edge => {
             createPage({
-              path: `/post/${edge.node.slug}/`,
-              component: slash(postTemplate),
+              path: `/module/${edge.node.slug}/`,
+              component: slash(moduleTemplate),
               context: edge.node,
             })
           })
