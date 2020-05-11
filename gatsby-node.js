@@ -46,6 +46,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         // Create Page pages.
         const pageTemplate = path.resolve("./src/templates/page.js")
+        const moduleUnderContentTemplate = path.resolve("./src/templates/moduleUnderContent.js")
         // We want to create a detailed page for each
         // page node. We'll just use the WordPress Slug for the slug.
         // The Page ID is prefixed with 'PAGE_'
@@ -53,14 +54,13 @@ exports.createPages = ({ graphql, actions }) => {
           // Gatsby uses Redux to manage its internal state.
           // Plugins and sites can use functions like "createPage"
           // to interact with Gatsby.
-
           createPage({
             // Each page is required to have a `path` as well
             // as a template component. The `context` is
             // optional but is often necessary so the template
             // can query data specific to each page.
             path: `/${edge.node.slug}/`,
-            component: slash(pageTemplate),
+            component: slash(edge.node.template === 'module_under_content.php' ? moduleUnderContentTemplate : pageTemplate),
             context: edge.node,
           })
         })
@@ -71,15 +71,16 @@ exports.createPages = ({ graphql, actions }) => {
       .then(() => {
         graphql(
           `
-            {
-              allWordpressPost {
+          {
+             allWordpressWpModule{
                 edges{
                   node{
-                    id
                     title
-                    slug
-                    excerpt
                     content
+                    slug
+                    featured_media{
+                      source_url
+                    }
                   }
                 }
               }
@@ -90,14 +91,14 @@ exports.createPages = ({ graphql, actions }) => {
             console.log(result.errors)
             reject(result.errors)
           }
-          const postTemplate = path.resolve("./src/templates/post.js")
+          const moduleTemplate = path.resolve("./src/templates/module.js")
           // We want to create a detailed page for each
           // post node. We'll just use the WordPress Slug for the slug.
           // The Post ID is prefixed with 'POST_'
-          _.each(result.data.allWordpressPost.edges, edge => {
+          _.each(result.data.allWordpressWpModule.edges, edge => {
             createPage({
-              path: `/post/${edge.node.slug}/`,
-              component: slash(postTemplate),
+              path: `/module/${edge.node.slug}/`,
+              component: slash(moduleTemplate),
               context: edge.node,
             })
           })
