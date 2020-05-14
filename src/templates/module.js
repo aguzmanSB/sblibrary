@@ -12,10 +12,12 @@ export default ({pageContext}) => (
     <strong>
     Website URL:
     </strong>
-    <a href={pageContext.acf.module_url} target="_blank">
+    <a href={pageContext.acf.module_url} target="_blank" rel="noopener noreferrer">
     {pageContext.acf.module_url}
     </a>
+    <div>
     <FeaturedImage src={pageContext.featured_media.source_url}/>
+    </div>
     <div dangerouslySetInnerHTML={{__html: pageContext.content}}/>
   </Layout>
 );

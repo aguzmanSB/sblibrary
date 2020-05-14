@@ -18,7 +18,7 @@ const Logo = () => (
       }
     }
     `} render={props =>(
-      <img src={props.allWordpressWpLogo.edges[0].node.url.source_url}/>
+      <img src={props.allWordpressWpLogo.edges[0].node.url.source_url} alt="Silverback Logo"/>
     )}/>
 )
 
